@@ -1,132 +1,120 @@
-Authentication-Advanced
-Overview
-Authentication-Advanced is a full-stack authentication boilerplate built using Node.js, Express, MongoDB, Redis, and React. It demonstrates a robust, modern, and scalable approach for authentication, session management, and security patterns in web applications.
+# Authentication-Advanced
 
-Key Features:
+A robust, production-grade authentication system using Node.js, Express, MongoDB, Redis, and React.
 
-Email-based registration with verification
+---
 
-Login with secure password hashing (bcrypt)
+## 🚀 Features
 
-Two-factor authentication via OTP (email)
+- **Email Registration & Verification**
+- **Login with OTP (2FA)**
+- **Access & Refresh Tokens (JWT)**
+- **Multi-device Session Management (Redis)**
+- **Advanced CSRF Protection**
+- **Secure Cookies (`httpOnly`, `SameSite`, `Secure`)**
+- **Input Validation & Sanitization (Zod, mongo-sanitize)**
+- **Rate Limiting (Redis)**
+- **Device Fingerprinting**
+- **Logout from Specific Device/Session**
+- **Modern React Frontend (axios interceptor, CSRF header)**
 
-Access & Refresh token-based session management (JWT)
+---
 
-Multi-device session management with Redis
+## 🗂 Project Structure
 
-Advanced CSRF protection (token in header, double-submit cookie)
-
-Security best practices: rate limiting, input validation, XSS/CSRF hardening
-
-Logout from single or all sessions/devices
-
-RESTful API backend with React frontend
-
-Production-ready architecture (caching, token rotation, device fingerprinting)
-
-Project Structure
-text
 Authentication-Advanced/
 ├── backend/
-│   ├── src/
-│   ├── package.json
-│   └── ...
+│ ├── src/
+│ └── package.json
 ├── frontend/
-│   ├── src/
-│   ├── package.json
-│   └── ...
-├── README.md
-└── ...
-Getting Started
-Prerequisites
-Node.js (v18+ recommended)
+│ ├── src/
+│ └── package.json
+└── README.md
 
-MongoDB (local or Atlas)
 
-Redis (local or hosted)
 
-npm or yarn
+---
 
-Installation
-1. Clone the repository
-bash
+## ⚡️ Getting Started
+
+### Clone the repo
+
 git clone https://github.com/gauravsharmaer/Authentication-Advanced.git
 cd Authentication-Advanced
-2. Backend Setup
-bash
+
+
+---
+
+### Backend Setup
+
 cd backend
-cp .env.example .env # create your .env file
 npm install
-Fill in the .env file with your configuration:
+cp .env.example .env # Add your MongoDB, Redis, JWT secrets, Email config, etc.
+npm run dev
+
+
+**Required `.env` variables (example):**
 
 PORT=5000
+MONGODB_URI=<your_mongo_uri>
+REDIS_URL=<your_redis_uri>
+JWT_SECRET=<your_jwt_secret>
+REFRESH_SECRET=<your_refresh_secret>
+FRONTEND_URL=http://localhost:5173
+[email config...]
 
-MONGODB_URI=your_mongodb_connection_string
 
-REDIS_URL=your_redis_connection_string
+---
 
-JWT_SECRET=your_jwt_secret
+### Frontend Setup
 
-REFRESH_SECRET=your_refresh_token_secret
-
-FRONTEND_URL=http://localhost:5173 (or your frontend domain)
-
-Email credentials for nodemailer
-
-Start the backend server:
-
-bash
-npm run dev
-3. Frontend Setup
-bash
 cd ../frontend
-cp .env.example .env # create your .env file if needed
 npm install
+cp .env.example .env # Set VITE_BASE_URL to your backend server
 npm run dev
-Configure VITE_BASE_URL in your .env file to match your backend API.
 
-Usage
-Register: Create a new account via the frontend, check your email for a verification link.
 
-Login: Enter your credentials, receive an OTP, enter the OTP to authenticate.
+---
 
-Session Management: Manage multiple device sessions. Logout from single/all devices.
+## 🧑‍💻 Usage
 
-Security: All endpoints are protected with advanced authentication and CSRF protection.
+1. **Register** with email & verify using link received in email.
+2. **Login** and enter OTP sent to your email.
+3. **Session Management**: See & logout from devices/sessions.
+4. **Security**: Protected endpoints, CSRF & rate limiting.
 
-API Endpoints
-See backend/src/routes/user.routes.js for all available endpoints.
+---
 
-Endpoint	Method	Description
-/api/v1/register	POST	Register a new user
-/api/v1/verify/:token	GET	Verify user email
-/api/v1/login	POST	Initiate login (sends OTP)
-/api/v1/verify-otp	POST	Verify OTP, issues tokens
-/api/v1/refreshAccessToken	POST	Refresh JWT access token
-/api/v1/logout	POST	Logout from current session
-/api/v1/logout/:sessionId	POST	Logout from specific session
-/api/v1/sessions	GET	List all active sessions/devices
-Security Highlights
-HTTP-only cookies for tokens (unreadable in JS)
+## 🔗 API Endpoints
 
-CSRF token accessible to frontend for double-submit protection
+| Route                        | Method | Description               |
+|------------------------------|--------|---------------------------|
+| `/api/v1/register`           | POST   | Register new user         |
+| `/api/v1/verify/:token`      | GET    | Verify email              |
+| `/api/v1/login`              | POST   | Login, get OTP            |
+| `/api/v1/verify-otp`         | POST   | Verify OTP, get tokens    |
+| `/api/v1/logout`             | POST   | Logout from session       |
+| `/api/v1/refreshAccessToken` | POST   | Refresh access token      |
+| `/api/v1/logout/:sessionId`  | POST   | Logout from device        |
+| `/api/v1/sessions`           | GET    | List active sessions      |
 
-Input validation with zod and sanitization
+---
 
-Rate limiting for registration & login
+## 🛡 Security
 
-Device fingerprinting for session integrity
+- **Tokens in HttpOnly cookies**
+- **CSRF header (frontend only)**
+- **Strict input validation**
+- **Rate limiting on critical endpoints**
+- **Password hashing with bcrypt**
 
-Robust session invalidation (device-level logout)
+---
 
-Password securely hashed with bcrypt
+## 📝 License
 
-Contributing
-Contributions are welcome! Please open issues or submit pull requests for bug fixes or enhancements.
+MIT
 
-License
-This project is open-source under the MIT License.
+---
 
-Built and maintained by Gaurav Sharma (github.com/gauravsharmaer)
+> Built with ♥ by [Gaurav Sharma](https://github.com/gauravsharmaer)
 
-You can personalize contact/use sections if you want. Add further deployment notes or environment variable samples as needed!
