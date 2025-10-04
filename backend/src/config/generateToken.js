@@ -347,7 +347,30 @@ export const verifyRefreshToken = async (refreshToken) => {
   try {
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
     const { id: userId, sessionId } = decoded;
-    // Check if this specific session's refresh token exists
+    // Check if this specific session's refresh token exists as every time we rotation token so we have new access ,refresh and csrf token but it still existsit means something si wrong -someone stored previous refresh token and used it to get new access token
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
+
+    // Attempt to mark this token as “used” atomically
+    const setResult = await redisClient.set(
+      `used_refresh:${tokenHash}`, // key
+      Date.now().toString(), // value (timestamp)
+      {
+        NX: true, // Only set if key doesn’t already exist
+        EX: 7 * 24 * 60 * 60, // Expire after 7 days
+      }
+    );
+
+    if (!setResult) {
+      // If setResult is falsy, the key was already present → reuse detected
+      console.error(
+        `🚨 Token reuse detected for user ${userId}, session ${sessionId}`
+      );
+      await invalidateUserSession(userId, sessionId);
+      return null;
+    }
     const storedToken = await redisClient.get(
       `refresh_token:${userId}:${sessionId}`
     );
